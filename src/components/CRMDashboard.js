@@ -6,6 +6,7 @@ import { STAGES } from '../constants/stages';
 import { useStudents } from '../hooks/useStudents';
 import StageColumn from './StageColumn';
 import StudentForm from './StudentForm';
+import NoteModal from './NoteModal';
 
 const CRMDashboard = () => {
   const { students, loading, error, addStudent, updateStudent, deleteStudent, moveStudent } = useStudents();
@@ -13,6 +14,8 @@ const CRMDashboard = () => {
   const [editingStudent, setEditingStudent] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [noteStudent, setNoteStudent] = useState(null);
 
   const filteredStudents = students.filter(student => {
     const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -61,6 +64,26 @@ const CRMDashboard = () => {
   const closeForm = () => {
     setIsFormOpen(false);
     setEditingStudent(null);
+  };
+
+  const handleAddNote = (student) => {
+    setNoteStudent(student);
+    setIsNoteModalOpen(true);
+  };
+
+  const handleSubmitNote = (noteData) => {
+    const updatedStudent = {
+      ...noteStudent,
+      notes: noteStudent.notes 
+        ? `${noteStudent.notes}\n\n[${noteData.timestamp}] ${noteData.text}`
+        : `[${noteData.timestamp}] ${noteData.text}`
+    };
+    updateStudent(noteStudent.id, updatedStudent);
+  };
+
+  const closeNoteModal = () => {
+    setIsNoteModalOpen(false);
+    setNoteStudent(null);
   };
 
   const stats = {
@@ -202,9 +225,10 @@ const CRMDashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
+          className="overflow-hidden"
         >
           <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex gap-6 overflow-x-auto pb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 min-h-[600px]">
               {STAGES.map((stage) => (
                 <StageColumn
                   key={stage.id}
@@ -212,6 +236,7 @@ const CRMDashboard = () => {
                   students={getStudentsByStage(stage.id)}
                   onEditStudent={openEditForm}
                   onDeleteStudent={handleDeleteStudent}
+                  onAddNote={handleAddNote}
                 />
               ))}
             </div>
@@ -225,6 +250,14 @@ const CRMDashboard = () => {
         onClose={closeForm}
         onSubmit={editingStudent ? handleEditStudent : handleAddStudent}
         initialData={editingStudent}
+      />
+
+      {/* Note Modal */}
+      <NoteModal
+        isOpen={isNoteModalOpen}
+        onClose={closeNoteModal}
+        onSubmit={handleSubmitNote}
+        student={noteStudent}
       />
     </div>
   );

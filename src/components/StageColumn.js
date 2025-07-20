@@ -3,11 +3,11 @@ import { motion } from 'framer-motion';
 import { Droppable } from '@hello-pangea/dnd';
 import StudentCard from './StudentCard';
 
-const StageColumn = ({ stage, students, onEditStudent, onDeleteStudent }) => {
+const StageColumn = ({ stage, students, onEditStudent, onDeleteStudent, onAddNote }) => {
   const studentCount = students.length;
 
   return (
-    <div className="flex-1 min-w-80 bg-gray-50 rounded-lg p-4">
+    <div className="w-full bg-gray-50 rounded-lg p-4 h-fit">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className={`font-semibold text-lg ${stage.color} px-3 py-1 rounded-lg border-2`}>
@@ -25,7 +25,7 @@ const StageColumn = ({ stage, students, onEditStudent, onDeleteStudent }) => {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`min-h-96 transition-all duration-200 rounded-lg p-2
+            className={`min-h-[400px] transition-all duration-200 rounded-lg p-2
               ${snapshot.isDraggingOver 
                 ? 'bg-blue-50 border-2 border-blue-300 border-dashed' 
                 : 'bg-transparent'}`}
@@ -46,6 +46,8 @@ const StageColumn = ({ stage, students, onEditStudent, onDeleteStudent }) => {
                   index={index}
                   onEdit={onEditStudent}
                   onDelete={onDeleteStudent}
+                  onAddNote={onAddNote}
+                  stage={stage.id}
                 />
               ))
             )}

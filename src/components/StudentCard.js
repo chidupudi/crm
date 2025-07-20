@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, MapPin, Phone, Edit, Trash2, Globe } from 'lucide-react';
+import { User, Mail, MapPin, Phone, Edit, Trash2, Globe, FileText } from 'lucide-react';
 import { Draggable } from '@hello-pangea/dnd';
 
-const StudentCard = ({ student, index, onEdit, onDelete }) => {
+const StudentCard = ({ student, index, onEdit, onDelete, onAddNote, stage }) => {
   return (
     <Draggable draggableId={student.id} index={index}>
       {(provided, snapshot) => (
@@ -70,6 +70,15 @@ const StudentCard = ({ student, index, onEdit, onDelete }) => {
             </div>
             
             <div className="flex flex-col gap-1 ml-2">
+              {stage === 'lead' && (
+                <button
+                  onClick={() => onAddNote(student)}
+                  className="p-1 text-gray-400 hover:text-green-500 transition-colors"
+                  title="Add note"
+                >
+                  <FileText size={16} />
+                </button>
+              )}
               <button
                 onClick={() => onEdit(student)}
                 className="p-1 text-gray-400 hover:text-blue-500 transition-colors"

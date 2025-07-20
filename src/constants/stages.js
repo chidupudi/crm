@@ -28,6 +28,12 @@ export const STAGES = [
     title: 'Completed',
     color: 'bg-green-100 border-green-300 text-green-800',
     description: 'Successfully placed/graduated'
+  },
+  {
+    id: 'not-interested',
+    title: 'Not Interested',
+    color: 'bg-red-100 border-red-300 text-red-800',
+    description: 'Not interested in services'
   }
 ];
 

@@ -76,6 +76,13 @@ const CRMDashboard = () => {
     setNoteStudent(null);
   };
 
+  const handleMarkAsNot = (studentId) => {
+    moveStudent(studentId, 'not-interested');
+    if (isNoteModalOpen) {
+      closeNoteModal();
+    }
+  };
+
   const stats = {
     total: students.length,
     leads: getStudentsByStage('lead').length,
@@ -217,7 +224,7 @@ const CRMDashboard = () => {
           transition={{ delay: 0.3 }}
           className="overflow-x-auto overflow-y-visible"
         >
-          <div className="flex gap-4 min-w-max px-2 pb-4" style={{ minWidth: 'calc(5 * 280px + 4 * 16px)' }}>
+          <div className="flex gap-4 min-w-max px-2 pb-4" style={{ minWidth: 'calc(6 * 280px + 5 * 16px)' }}>
             {STAGES.map((stage) => (
               <div key={stage.id} className="flex-shrink-0" style={{ width: '280px' }}>
                 <StageColumn
@@ -227,6 +234,7 @@ const CRMDashboard = () => {
                   onDeleteStudent={handleDeleteStudent}
                   onAddNote={handleAddNote}
                   onMoveStudent={moveStudent}
+                  onMarkAsNot={handleMarkAsNot}
                   allStages={STAGES}
                 />
               </div>
@@ -248,6 +256,7 @@ const CRMDashboard = () => {
         isOpen={isNoteModalOpen}
         onClose={closeNoteModal}
         onSubmit={handleSubmitNote}
+        onMarkAsNot={handleMarkAsNot}
         student={noteStudent}
       />
     </div>

@@ -1,9 +1,16 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, MapPin, Phone, Edit, Trash2, Globe, FileText, ArrowRight } from 'lucide-react';
+import { User, Mail, MapPin, Phone, Edit, Trash2, Globe, FileText, ArrowRight, X } from 'lucide-react';
 
-const StudentCard = ({ student, index, onEdit, onDelete, onAddNote, onMoveStudent, stage, allStages }) => {
+const StudentCard = ({ student, index, onEdit, onDelete, onAddNote, onMoveStudent, onMarkAsNot, stage, allStages }) => {
   const availableStages = allStages.filter(s => s.id !== stage);
+  
+  // Get only the latest note
+  const getLatestNote = (notes) => {
+    if (!notes) return null;
+    const noteArray = notes.split('\n\n').filter(note => note.trim());
+    return noteArray.length > 0 ? noteArray[noteArray.length - 1] : null;
+  };
 
   return (
     <motion.div
@@ -58,18 +65,26 @@ const StudentCard = ({ student, index, onEdit, onDelete, onAddNote, onMoveStuden
                 </div>
               )}
               
-              {student.notes && (
-                <div className="mt-2 space-y-1">
-                  {student.notes.split('\n\n').map((note, index) => (
-                    <div key={index} className="text-xs text-gray-600 bg-gray-50 p-2 rounded border-l-2 border-blue-200">
-                      {note}
-                    </div>
-                  ))}
+              {getLatestNote(student.notes) && (
+                <div className="mt-2">
+                  <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded border-l-2 border-blue-200">
+                    {getLatestNote(student.notes)}
+                  </div>
                 </div>
               )}
             </div>
             
             <div className="flex flex-col gap-0.5 ml-2 flex-shrink-0">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMarkAsNot && onMarkAsNot(student.id);
+                }}
+                className="p-1 text-gray-400 hover:text-red-500 transition-colors rounded hover:bg-red-50"
+                title="Mark as Not Interested"
+              >
+                <X size={14} />
+              </button>
               {availableStages.length > 0 && (
                 <div className="relative group">
                   <button

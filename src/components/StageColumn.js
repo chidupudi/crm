@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import StudentCard from './StudentCard';
 
-const StageColumn = ({ stage, students, onEditStudent, onDeleteStudent, onAddNote, onMoveStudent, allStages }) => {
+const StageColumn = ({ stage, students, onEditStudent, onDeleteStudent, onAddNote, onMoveStudent, onMarkAsNot, allStages }) => {
   const studentCount = students.length;
 
   return (
@@ -43,6 +43,7 @@ const StageColumn = ({ stage, students, onEditStudent, onDeleteStudent, onAddNot
                 onDelete={onDeleteStudent}
                 onAddNote={onAddNote}
                 onMoveStudent={onMoveStudent}
+                onMarkAsNot={onMarkAsNot}
                 stage={stage.id}
                 allStages={allStages}
               />

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, FileText, Clock } from 'lucide-react';
 
-const NoteModal = ({ isOpen, onClose, onSubmit, student }) => {
+const NoteModal = ({ isOpen, onClose, onSubmit, onMarkAsNot, student }) => {
   const [note, setNote] = useState('');
 
   const handleSubmit = (e) => {
@@ -32,6 +32,13 @@ const NoteModal = ({ isOpen, onClose, onSubmit, student }) => {
   const handleClose = () => {
     setNote('');
     onClose();
+  };
+
+  const handleMarkAsNot = () => {
+    if (onMarkAsNot) {
+      onMarkAsNot(student?.id);
+    }
+    handleClose();
   };
 
   return (
@@ -97,6 +104,15 @@ const NoteModal = ({ isOpen, onClose, onSubmit, student }) => {
                 </div>
 
                 <div className="flex gap-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={handleMarkAsNot}
+                    className="px-4 py-2 text-red-700 bg-red-100 rounded-lg hover:bg-red-200 transition-colors"
+                    title="Mark as Not Interested"
+                  >
+                    <X size={16} className="inline mr-1" />
+                    Not
+                  </button>
                   <button
                     type="button"
                     onClick={handleClose}

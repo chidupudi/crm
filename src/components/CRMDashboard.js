@@ -32,13 +32,23 @@ const CRMDashboard = () => {
   };
 
   const handleDragEnd = (result) => {
-    if (!result.destination) return;
+    const { destination, source, draggableId } = result;
 
-    const { source, destination, draggableId } = result;
+    // If dropped outside a droppable area or no destination
+    if (!destination) {
+      return;
+    }
 
+    // If dropped in the same position
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
+      return;
+    }
+
+    // If moving to a different stage
     if (source.droppableId !== destination.droppableId) {
       moveStudent(draggableId, destination.droppableId);
     }
+    // If reordering within the same stage, we could implement that here if needed
   };
 
   const handleAddStudent = (studentData) => {
@@ -225,19 +235,20 @@ const CRMDashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="overflow-hidden"
+          className="overflow-x-auto overflow-y-visible"
         >
           <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 min-h-[600px]">
+            <div className="flex gap-4 min-w-max px-2 pb-4" style={{ minWidth: 'calc(5 * 280px + 4 * 16px)' }}>
               {STAGES.map((stage) => (
-                <StageColumn
-                  key={stage.id}
-                  stage={stage}
-                  students={getStudentsByStage(stage.id)}
-                  onEditStudent={openEditForm}
-                  onDeleteStudent={handleDeleteStudent}
-                  onAddNote={handleAddNote}
-                />
+                <div key={stage.id} className="flex-shrink-0" style={{ width: '280px' }}>
+                  <StageColumn
+                    stage={stage}
+                    students={getStudentsByStage(stage.id)}
+                    onEditStudent={openEditForm}
+                    onDeleteStudent={handleDeleteStudent}
+                    onAddNote={handleAddNote}
+                  />
+                </div>
               ))}
             </div>
           </DragDropContext>

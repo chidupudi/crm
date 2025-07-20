@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { DragDropContext } from '@hello-pangea/dnd';
 import { motion } from 'framer-motion';
 import { Plus, Search, Filter, Users, TrendingUp } from 'lucide-react';
 import { STAGES } from '../constants/stages';
@@ -31,25 +30,6 @@ const CRMDashboard = () => {
     return filteredStudents.filter(student => student.stage === stageId);
   };
 
-  const handleDragEnd = (result) => {
-    const { destination, source, draggableId } = result;
-
-    // If dropped outside a droppable area or no destination
-    if (!destination) {
-      return;
-    }
-
-    // If dropped in the same position
-    if (destination.droppableId === source.droppableId && destination.index === source.index) {
-      return;
-    }
-
-    // If moving to a different stage
-    if (source.droppableId !== destination.droppableId) {
-      moveStudent(draggableId, destination.droppableId);
-    }
-    // If reordering within the same stage, we could implement that here if needed
-  };
 
   const handleAddStudent = (studentData) => {
     addStudent(studentData);
@@ -237,21 +217,21 @@ const CRMDashboard = () => {
           transition={{ delay: 0.3 }}
           className="overflow-x-auto overflow-y-visible"
         >
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex gap-4 min-w-max px-2 pb-4" style={{ minWidth: 'calc(5 * 280px + 4 * 16px)' }}>
-              {STAGES.map((stage) => (
-                <div key={stage.id} className="flex-shrink-0" style={{ width: '280px' }}>
-                  <StageColumn
-                    stage={stage}
-                    students={getStudentsByStage(stage.id)}
-                    onEditStudent={openEditForm}
-                    onDeleteStudent={handleDeleteStudent}
-                    onAddNote={handleAddNote}
-                  />
-                </div>
-              ))}
-            </div>
-          </DragDropContext>
+          <div className="flex gap-4 min-w-max px-2 pb-4" style={{ minWidth: 'calc(5 * 280px + 4 * 16px)' }}>
+            {STAGES.map((stage) => (
+              <div key={stage.id} className="flex-shrink-0" style={{ width: '280px' }}>
+                <StageColumn
+                  stage={stage}
+                  students={getStudentsByStage(stage.id)}
+                  onEditStudent={openEditForm}
+                  onDeleteStudent={handleDeleteStudent}
+                  onAddNote={handleAddNote}
+                  onMoveStudent={moveStudent}
+                  allStages={STAGES}
+                />
+              </div>
+            ))}
+          </div>
         </motion.div>
       </div>
 
